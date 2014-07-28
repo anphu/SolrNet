@@ -482,8 +482,17 @@ namespace SolrNet.Tests {
             var docNode = xml.XPathSelectElement("response/lst[@name='spellcheck']");
             var spellChecking = parser.ParseSpellChecking(docNode);
             Assert.IsNotNull(spellChecking);
-            Assert.AreEqual("dell ultrasharp", spellChecking.Collation);
+
             Assert.AreEqual(2, spellChecking.Count);
+            foreach (var spellcheckResult in spellChecking)
+            {
+                foreach (var suggestion in spellcheckResult.Suggestions)
+                {
+                    Assert.IsTrue(!String.IsNullOrEmpty(suggestion));
+                }
+            }
+
+            Assert.AreEqual("dell ultrasharp", spellChecking.Collation);
         }
 
         [Test]

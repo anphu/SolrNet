@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using SolrNet.Utils;
+using System.Linq;
 
 namespace SolrNet.Impl.ResponseParsers {
     /// <summary>
@@ -57,7 +58,13 @@ namespace SolrNet.Impl.ResponseParsers {
                 result.StartOffset = Convert.ToInt32(c.XPathSelectElement("int[@name='startOffset']").Value);
                 var suggestions = new List<string>();
                 var suggestionNodes = c.XPathSelectElements("arr[@name='suggestion']/lst/str");
-                foreach (var suggestionNode in suggestionNodes) {
+                if (!suggestionNodes.Any())
+                {
+                    suggestionNodes = c.XPathSelectElements("arr[@name='suggestion']/str");
+                }
+
+                foreach (var suggestionNode in suggestionNodes)
+                {
                     suggestions.Add(suggestionNode.Value);
                 }
                 result.Suggestions = suggestions;
